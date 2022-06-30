@@ -18,9 +18,40 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $users = array();
-        $users = User::all();
-        //if user wanted login with mobile ans sms code
-        if ($request->type == 'mobile' && $request->get(''))
+        //if user wanted login with mobile and sms code OR with mobile and password
+        if ($request->type == 'mobile' and $request->get('mobile')!=null){
+            $users = User::query()->where('mobile',$request->get('mobile'))->first();
+            if (($users->code_confirme!=null and $users->code_confirme == $request->get('code_confirme')) ||
+                 $users->password == $request->get('password'))
+            {
+                echo "welcome";
+            }
+            else{
+                echo "error";
+            }
+
+        }
+        //if user wanted to login with email and password
+        elseif ($request->type == 'email' and $request->get('email') !=null){
+            $users = User::query()->where('email',$request->get('email'))->first();
+            if ($users->password == $request->get('password')){
+                echo "welcome";
+            }
+            else{
+                echo "error";
+            }
+
+        }
+
+
+
+
+    }
+
+
+    public function register()
+    {
+
 
     }
 }
